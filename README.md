@@ -1,6 +1,6 @@
-## peopleperhour/elastalert ##
+## vaultsystems/elastalert-docker ##
 
-Docker image for the elasticalert by YELP with Alpine base image
+Docker image for the elasticalert by YELP with Ubuntu base image
 
 More information regarding how to write rules http://elastalert.readthedocs.org/en/latest/recipes/writing_filters.html
 and some example rules https://github.com/Yelp/elastalert/tree/master/example_rules
@@ -10,6 +10,8 @@ This container will check if there is data inside the /opt/rules directory and i
 The name of the bucket as well as the credentials to access the bucket (IAM user) are passed as env vars (see bellow Environment Variables)
 
 The container is based on the https://hub.docker.com/r/ivankrizsan/elastalert/ docker container with addition of s3 download rules.
+
+The container has been forked from https://github.com/PeoplePerHour/elastalert-docker to be based on Ubuntu, and using a later version of Elastalert.
 
 ### Build
 

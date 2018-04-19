@@ -1,7 +1,7 @@
-FROM alpine:3.5
+FROM ubuntu:14.04
 
 # URL from which to download Elastalert.
-ENV ELASTALERT_VERSION 0.1.6
+ENV ELASTALERT_VERSION 0.1.29
 ENV ELASTALERT_URL https://github.com/Yelp/elastalert/archive/v${ELASTALERT_VERSION}.zip
 
 # Directory holding configuration for Elastalert and Supervisor.
@@ -28,10 +28,10 @@ ENV S3_BUCKET=staging_elastalert_rules
 # Python has a problem with SSL certificate verification
 ENV PYTHONHTTPSVERIFY=0
 
-RUN apk add --no-cache bash gcc musl-dev openssl gettext  wget python python-dev py-setuptools && \
-    apk add --no-cache --virtual=build-dependencies wget ca-certificates && \
+RUN apt-get update && apt-get install -y bash gcc musl-dev openssl gettext  wget python python-dev python-setuptools && \
+    apt-get install -y build-essential wget ca-certificates unzip && \
     wget "https://bootstrap.pypa.io/get-pip.py" -O /dev/stdout | python && \
-    apk del build-dependencies
+    apt remove -y build-essential
 
 WORKDIR /opt
 
@@ -41,6 +41,7 @@ COPY ./start-elastalert.sh /opt/
 RUN \
 # Install AWS CLI
     pip install awscli &&\
+    pip install setuptools --upgrade &&\
 
 # Download and unpack Elastalert.
     wget --no-check-certificate ${ELASTALERT_URL} && \
@@ -81,10 +82,10 @@ RUN python setup.py install && \
     supervisord -c ${ELASTALERT_SUPERVISOR_CONF} && \
 
 # Clean up.
-    apk del python-dev && \
-    apk del musl-dev && \
-    apk del gcc && \
-    rm -rf /var/cache/apk/*
+    apt remove -y python-dev && \
+    apt remove -y musl-dev && \
+    apt remove -y gcc && \
+    rm -rf /var/cache/apt/*
 
 
 # Define mount points.
